@@ -8,55 +8,57 @@ import {
   TouchableOpacity,
   Keyboard,
   ScrollView,
+  Modal,
+  modalVisible, Pressable
 } from "react-native";
 import Task from "./components/Task";
 
 export default function App() {
   const [task, setTask] = useState();
   const [taskItems, setTaskItems] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const handleAddTask = () => {
     Keyboard.dismiss();
     setTaskItems([...taskItems, task]);
     setTask(null);
   };
-
+const deleteTask = (index) => {
+    let itemsCopy = [...taskItems];
+    itemsCopy.splice(index, 1);
+    setTaskItems(itemsCopy);
+  };
   const completeTask = (index) => {
     let itemsCopy = [...taskItems];
     itemsCopy.splice(index, 1);
     setTaskItems(itemsCopy);
   };
 
+
   return (
     <View style={styles.container}>
-      {/* Added this scroll view to enable scrolling when list gets longer than the page */}
+
       <ScrollView
         contentContainerStyle={{
           flexGrow: 1,
         }}
         keyboardShouldPersistTaps="handled"
       >
-        {/* Today's Tasks */}
         <View style={styles.tasksWrapper}>
           <Text style={styles.sectionTitle}>Today's tasks</Text>
           <View style={styles.items}>
-            {/* This is where the tasks will go! */}
-            {taskItems.map((item, index) => {
-              return (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() => completeTask(index)}
-                >
-                  <Task text={item} />
-                </TouchableOpacity>
-              );
-            })}
+            {taskItems.map((task, index) => (
+        <Task
+          key={index}
+          index={index}
+          text={task.text}
+          onDelete={deleteTask}
+        />
+      ))}
           </View>
         </View>
       </ScrollView>
 
-      {/* Write a task */}
-      {/* Uses a keyboard avoiding view which ensures the keyboard does not cover the items on screen */}
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.writeTaskWrapper}
@@ -67,6 +69,7 @@ export default function App() {
           value={task}
           onChangeText={(text) => setTask(text)}
         />
+
         <TouchableOpacity onPress={() => handleAddTask()}>
           <View style={styles.addWrapper}>
             <Text style={styles.addText}>+</Text>
@@ -104,9 +107,9 @@ const styles = StyleSheet.create({
   input: {
     paddingVertical: 15,
     paddingHorizontal: 15,
-    backgroundColor: "#FFF",
+    backgroundColor: "grey",
     borderRadius: 60,
-    borderColor: "#C0C0C0",
+    borderColor: "black",
     borderWidth: 1,
     width: 250,
   },
@@ -117,8 +120,51 @@ const styles = StyleSheet.create({
     borderRadius: 60,
     justifyContent: "center",
     alignItems: "center",
-    borderColor: "#C0C0C0",
+    borderColor: "black",
     borderWidth: 1,
   },
+
   addText: {},
+   centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: '#F194FF',
+  },
+  buttonClose: {
+    backgroundColor: '#2196F3',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+
 });
