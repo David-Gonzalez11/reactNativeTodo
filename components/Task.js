@@ -13,10 +13,10 @@ const Task = (props) => {
   const [taskItems, setTaskItems] = useState([]);
 
   const completeTask = (index) => {
-    // let itemsCopy = [...taskItems];
-    // itemsCopy.splice(index, 1);
-    // setTaskItems(itemsCopy);
-    // setModalVisible(false); // Close the modal after deleting the task
+    let itemsCopy = [...taskItems];
+    itemsCopy.splice(index, 1);
+    setTaskItems(itemsCopy);
+    setModalVisible(false); // Close the modal after deleting the task
         props.onDelete(props.index); // Notify the parent component to delete the task
     setModalVisible(false); // Close the modal after deleting the task
 
@@ -27,7 +27,7 @@ const Task = (props) => {
       <View style={styles.itemLeft}>
         <View style={styles.square}></View>
         <View style={styles.centeredView}>
-          <Modal
+           <Modal
             animationType="slide"
             transparent={true}
             visible={modalVisible}
@@ -40,26 +40,23 @@ const Task = (props) => {
                 <Text style={styles.modalText}>
                   Are you sure you want to delete this task?
                 </Text>
-                <View style={styles.buttonContainer}>
+                <View style={styles.buttonContainer}/>
 
                 <Pressable
                   style={[styles.button, styles.buttonClose]}
                   onPress={() => completeTask(props.index)} // Pass the index as a parameter
-                >
-                  <View style={styles.textStyle}>
+                />
+                <View style={styles.textStyle}>
 
                   <Text style={styles.textStyle}>Yes</Text>
-                                  </Pressable>
 
                    <Pressable
                     style={[styles.button, styles.buttonClose]}
                     onPress={() => setModalVisible(false)}
-                  >
+                  />
                     <Text style={styles.textStyle}>No</Text>
-                  </Pressable>
-                                    </View>
 
-                                </View>
+                 </View>
 
               </View>
             </View>
@@ -103,6 +100,7 @@ const styles = StyleSheet.create({
   },
   itemText: {
     maxWidth: "80%",
+    color: "red"
   },
    button: {
     borderRadius: 20,
